@@ -1,12 +1,12 @@
 [package]
-name        = "boilerplate"
+name        = "portunes"
 version     = "0.0.0"
-description = "A template for rust binaries"
+description = "Generate passwords"
 authors     = ["Casey Rodarmor <casey@rodarmor.com>"]
 license     = "WTFPL OR MIT OR Apache-2.0"
-homepage    = "https://github.com/casey/boilerplate"
+homepage    = "https://github.com/casey/portunes"
 
 [dependencies]
-error-chain = "0.9.0"
-clap        = "2.0.0"
-brev        = "0.1.7"
+clap        = "^2.20.1"
+error-chain = "^0.10.0"
+rand        = "^0.3.15"
