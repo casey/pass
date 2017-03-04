@@ -7,7 +7,25 @@ version](https://img.shields.io/crates/v/portunes.svg)](https://crates.io/crates
 
 Generate passwords with specified bits of entropy
 
+- tests:
+  enough bits of entropy produces every sombol in alphabet
+  alphabets do not have repeated symbols
+
+- come up with a better name
+
 - generate readme from help string
+
+- use error chain
+
+- actually handle errors
+
+- option to copy to clipboard
+
+- after help
+
+- comment everything
+
+- memonic word lists
 
 - default to alternating letters in two groups with a symbol separating them, and X bits of entropy
 
