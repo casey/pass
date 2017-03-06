@@ -7,9 +7,8 @@ version](https://img.shields.io/crates/v/portunes.svg)](https://crates.io/crates
 
 Generate passwords with specified bits of entropy
 
-- tests:
-  enough bits of entropy produces every sombol in alphabet
-  alphabets do not have repeated symbols
+- minimize length when using words
+  perhaps use fewer words
 
 - come up with a better name
 
@@ -34,16 +33,11 @@ Generate passwords with specified bits of entropy
   letters, right handed letters, alternating letters, binary,
   octal, pronounceable english-like gibberish
 
-- calculate bits of entropy from calls to choice
-  . use unique items, not number of items
-
 - deterministic rng for testing
 
 - separator: none, space, dash, alphabet
 
 - group size: 1 symbol, two symbols, etc
-
-- bits of entropy
 
 - recommendations for security
   basic online password, important online password, bitcoin wallet

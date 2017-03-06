@@ -1,4 +1,5 @@
-default: test
+default:
+	cargo test
 
 test:
 	cargo test

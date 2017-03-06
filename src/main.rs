@@ -26,57 +26,104 @@ mod error {
 
 use error::*;
 
-// abcdefghijklmnopqrstuvwxyz
-// ABCDEFGHIJKLMNOPQRSTUVWXYZ
-// !@#$%^&*()
-// 0123456789
-// qwerasdfzxcv
-
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 enum Alphabet {
+  Digits,
+  Letters,
+  Lowercase,
+  Uppercase,
   Fast,
+  Hex,
+  HexLowercase,
+  HexUppercase,
   Left,
+  Octal,
+  Punctuation,
   Right,
+  Words,
 }
 
 use Alphabet::*;
 
 impl Alphabet {
-  // fn new(symbols: &str) -> Alphabet{
-  //   Alphabet {
-  //     symbols: symbols.chars().collect()
-  //   }
-  // }
   fn symbols(self) -> Vec<String> {
     match self {
-      Fast  => "asdfjkl;".chars().map(|c| c.to_string()).collect(),
-      Left  => "qwertasdfgzxcvb".chars().map(|c| c.to_string()).collect(),
-      Right => "yuiophjkl;nm,./".chars().map(|c| c.to_string()).collect(),
+      Digits         => chars("0123456789"                                          ),
+      Letters        => chars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+      Lowercase      => chars("abcdefghijklmnopqrstuvwxyz"                          ),
+      Uppercase      => chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ"                          ),
+      Fast           => chars("asdfjkl;"                                            ),
+      Hex            => chars("0123456789abcdefABCDEF"                              ),
+      HexLowercase   => chars("0123456789abcdef"                                    ),
+      HexUppercase   => chars("0123456789ABCDEF"                                    ),
+      Left           => chars("qwertasdfgzxcvb"                                     ),
+      Octal          => chars("01234567"                                            ),
+      Right          => chars("yuiophjkl;nm,./"                                     ),
+      Punctuation    => chars(r#"~`!@#$%^&*()-_=+[{]}\|;:'",<.>/?"#                 ),
+      Words          => include_str!("words.txt")
+        .split_whitespace()
+        .map(str::to_string)
+        .collect(),
     }
   }
 
   fn name(self) -> STR {
     match self {
-      Fast  => "fast",
-      Left  => "left",
-      Right => "right",
+      Digits         => "digits",
+      Letters        => "letters",
+      Lowercase      => "lowercase",
+      Uppercase      => "uppercase",
+      Fast           => "fast",
+      Hex            => "hex",
+      HexLowercase   => "hex-lowercase",
+      HexUppercase   => "hex-uppercase",
+      Left           => "left",
+      Octal          => "octal",
+      Punctuation    => "punctuation",
+      Right          => "right",
+      Words          => "words",
     }
   }
 
   fn from_name(name: &str) -> Option<Alphabet> {
     match name {
-      "fast"  => Some(Fast),
-      "left"  => Some(Left),
-      "right" => Some(Right),
-      _       => None,
+      "digits"        => Some(Digits),
+      "letters"       => Some(Letters),
+      "lowercase"     => Some(Lowercase),
+      "uppercase"     => Some(Uppercase),
+      "fast"          => Some(Fast),
+      "hex"           => Some(Hex),
+      "hex-lowercase" => Some(HexLowercase),
+      "hex-uppercase" => Some(HexUppercase),
+      "left"          => Some(Left),
+      "octal"         => Some(Octal),
+      "right"         => Some(Right),
+      "words"         => Some(Words),
+      "punctuation"   => Some(Punctuation),
+      _               => None,
     }
   }
 }
 
 static ALPHABETS: &'static [Alphabet] = &[
+  Digits,
+  Letters,
+  Lowercase,
+  Uppercase,
   Fast,
+  Hex,
+  HexLowercase,
+  HexUppercase,
   Left,
+  Octal,
+  Punctuation,
+  Right,
+  Words,
 ];
+
+fn chars(s: &str) -> Vec<String> {
+  s.chars().map(|c| c.to_string()).collect()
+}
 
 fn run<I, T>(args: I) -> Result<String>
   where I: IntoIterator<Item = T>,
@@ -114,7 +161,7 @@ fn run<I, T>(args: I) -> Result<String>
     .get_matches_from_safe(args)?;
 
   let required_entropy: f64 = matches.value_of("bits").unwrap_or("128").parse().unwrap();
-  let alphabet = Alphabet::from_name(matches.value_of("alphabet").unwrap_or("fast")).unwrap();
+  let alphabet = Alphabet::from_name(matches.value_of("alphabet").unwrap_or("hex-lower")).unwrap();
   let separator = matches.value_of("separator").unwrap_or("");
   let symbols = alphabet.symbols();
   let entropy_per_choice = (symbols.len() as f64).log2();
