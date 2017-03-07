@@ -28,6 +28,7 @@ use error::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum Alphabet {
+  Alphanumeric,
   Digits,
   Letters,
   Lowercase,
@@ -38,6 +39,7 @@ enum Alphabet {
   HexUppercase,
   Left,
   Octal,
+  Graphical,
   Punctuation,
   Right,
   Words,
@@ -45,21 +47,37 @@ enum Alphabet {
 
 use Alphabet::*;
 
+static DIGITS:      STR = "0123456789";
+static LOWERCASE:   STR = "abcdefghijklmnopqrstuvwxyz";
+static UPPERCASE:   STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static PUNCTUATION: STR = r#"~`!@#$%^&*()-_=+[{]}\|;:'",<.>/?"#;
+
 impl Alphabet {
   fn symbols(self) -> Vec<String> {
     match self {
-      Digits         => chars("0123456789"                                          ),
-      Letters        => chars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-      Lowercase      => chars("abcdefghijklmnopqrstuvwxyz"                          ),
-      Uppercase      => chars("ABCDEFGHIJKLMNOPQRSTUVWXYZ"                          ),
-      Fast           => chars("asdfjkl;"                                            ),
-      Hex            => chars("0123456789abcdefABCDEF"                              ),
-      HexLowercase   => chars("0123456789abcdef"                                    ),
-      HexUppercase   => chars("0123456789ABCDEF"                                    ),
-      Left           => chars("qwertasdfgzxcvb"                                     ),
-      Octal          => chars("01234567"                                            ),
-      Right          => chars("yuiophjkl;nm,./"                                     ),
-      Punctuation    => chars(r#"~`!@#$%^&*()-_=+[{]}\|;:'",<.>/?"#                 ),
+      Digits         => chars(DIGITS),
+      Letters        => chars(DIGITS),
+      Lowercase      => chars(LOWERCASE),
+      Uppercase      => chars(UPPERCASE),
+      Fast           => chars("asdfjkl;"),
+      Hex            => chars("0123456789abcdefABCDEF"),
+      HexLowercase   => chars("0123456789abcdef"),
+      HexUppercase   => chars("0123456789ABCDEF"),
+      Left           => chars("qwertasdfgzxcvb"),
+      Octal          => chars("01234567"),
+      Right          => chars("yuiophjkl;nm,./"),
+      Punctuation    => chars(PUNCTUATION),
+      Graphical      => 
+        chars(DIGITS).into_iter()
+        .chain(chars(UPPERCASE).into_iter())
+        .chain(chars(LOWERCASE).into_iter())
+        .chain(chars(PUNCTUATION).into_iter())
+        .collect(),
+      Alphanumeric   => 
+        chars(DIGITS).into_iter()
+        .chain(chars(UPPERCASE).into_iter())
+        .chain(chars(LOWERCASE).into_iter())
+        .collect(),
       Words          => include_str!("words.txt")
         .split_whitespace()
         .map(str::to_string)
@@ -69,43 +87,48 @@ impl Alphabet {
 
   fn name(self) -> STR {
     match self {
+      Alphanumeric   => "alphanumeric",
       Digits         => "digits",
-      Letters        => "letters",
-      Lowercase      => "lowercase",
-      Uppercase      => "uppercase",
       Fast           => "fast",
+      Graphical      => "graphical",
       Hex            => "hex",
       HexLowercase   => "hex-lowercase",
       HexUppercase   => "hex-uppercase",
       Left           => "left",
+      Letters        => "letters",
+      Lowercase      => "lowercase",
       Octal          => "octal",
       Punctuation    => "punctuation",
       Right          => "right",
+      Uppercase      => "uppercase",
       Words          => "words",
     }
   }
 
   fn from_name(name: &str) -> Option<Alphabet> {
     match name {
+      "alphanumeric"  => Some(Alphanumeric),
       "digits"        => Some(Digits),
-      "letters"       => Some(Letters),
-      "lowercase"     => Some(Lowercase),
-      "uppercase"     => Some(Uppercase),
       "fast"          => Some(Fast),
+      "graphical"     => Some(Graphical),
       "hex"           => Some(Hex),
       "hex-lowercase" => Some(HexLowercase),
       "hex-uppercase" => Some(HexUppercase),
       "left"          => Some(Left),
+      "letters"       => Some(Letters),
+      "lowercase"     => Some(Lowercase),
       "octal"         => Some(Octal),
-      "right"         => Some(Right),
-      "words"         => Some(Words),
       "punctuation"   => Some(Punctuation),
+      "right"         => Some(Right),
+      "uppercase"     => Some(Uppercase),
+      "words"         => Some(Words),
       _               => None,
     }
   }
 }
 
 static ALPHABETS: &'static [Alphabet] = &[
+  Alphanumeric,
   Digits,
   Letters,
   Lowercase,
@@ -116,6 +139,7 @@ static ALPHABETS: &'static [Alphabet] = &[
   HexUppercase,
   Left,
   Octal,
+  Graphical,
   Punctuation,
   Right,
   Words,
