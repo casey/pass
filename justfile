@@ -104,3 +104,9 @@ done BRANCH:
 
 update-boilerplate:
 	git pull --rebase=false boilerplate master
+
+debug: build
+	lldb target/debug/portunes
+
+run:
+	cargo run
