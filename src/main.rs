@@ -166,27 +166,26 @@ fn run<I, T>(args: I) -> Result<String>
          .short("a")
          .long("alphabet")
          .takes_value(true)
+         .default_value(Alphanumeric.name())
          .possible_values(&alphabet_names))
     .arg(Arg::with_name("separator")
          .short("s")
          .long("separator")
-         .takes_value(true))
-    .arg(Arg::with_name("group size")
-         .short("g")
-         .long("group")
-         .takes_value(true))
+         .takes_value(true)
+         .default_value(""))
     .arg(Arg::with_name("bits of entropy")
          .short("b")
          .long("bits")
-         .takes_value(true))
+         .takes_value(true)
+         .default_value("128.0"))
     .arg(Arg::with_name("ruin everything")
          .help("Generate deterministic passwords for testing")
          .long("ruin-everything"))
     .get_matches_from_safe(args)?;
 
-  let required_entropy: f64 = matches.value_of("bits").unwrap_or("128").parse().unwrap();
-  let alphabet = Alphabet::from_name(matches.value_of("alphabet").unwrap_or("hex-lower")).unwrap();
-  let separator = matches.value_of("separator").unwrap_or("");
+  let required_entropy: f64 = matches.value_of("bits of entropy").unwrap().parse().unwrap();
+  let alphabet = Alphabet::from_name(matches.value_of("alphabet").unwrap()).unwrap();
+  let separator = matches.value_of("separator").unwrap();
   let symbols = alphabet.symbols();
   let entropy_per_choice = (symbols.len() as f64).log2();
   let choices = (required_entropy / entropy_per_choice).ceil() as u64;
