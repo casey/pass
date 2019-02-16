@@ -1,12 +1,12 @@
 [package]
 name        = "portunes"
-version     = "0.0.1"
+version     = "0.0.2"
 description = "Generate passwords"
 authors     = ["Casey Rodarmor <casey@rodarmor.com>"]
-license     = "WTFPL OR MIT OR Apache-2.0"
+license     = "CC0-1.0"
 repository  = "https://github.com/casey/portunes"
+edition     = "2018"
 
 [dependencies]
-clap        = "^2.20.1"
-error-chain = "^0.10.0"
-rand        = "^0.3.15"
+clap = "2.20.1"
+rand = "0.3.15"
